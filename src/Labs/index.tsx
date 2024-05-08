@@ -6,7 +6,9 @@ import Lab3 from "./Lab3";
 export default function Labs() {
   return (
     <div>
-      <h1>Labs</h1>
+      <h1>Timothy Bennett</h1>
+      <h2>Web Development SEC 01</h2>
+      <h3>Labs</h3>
       <TOC />
       <Routes>
         <Route path="Lab1" element={<Lab1 />} />
