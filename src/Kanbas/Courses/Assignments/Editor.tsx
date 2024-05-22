@@ -1,13 +1,21 @@
 import "../../styles.css";
 import { BsX } from "react-icons/bs";
+import { assignments } from "../../Database";
+import { useParams } from "react-router";
+import { FaCalendarAlt } from "react-icons/fa";
+import { Link } from "react-router-dom";
+
 export default function AssignmentEditor() {
+  const { cid, id } = useParams();
+  console.log(cid, id);
+  const assignment = assignments.find((assignments) => assignments._id === id) || { "_id": "A101", "title": "Meet Your Advisor", "course": "COE101", "points": 100, "aDate": "May 6 at 12:00 am", "dDate": "May 13 at 12:00 am", "description": "Meet with your advisor to discuss your academic progress."};
     return (
       <div>
         <label htmlFor="wd-name" className="form-label">Assignment Name</label>
-        <input id="wd-name" className="form-control" />
+        <input id="wd-name" className="form-control" value={`${assignment.title}`}/>
         <br />
         <br />
-        <textarea className="form-control" id="wd-description"
+        <textarea className="form-control" id="wd-description" value={`${assignment.description}`}
               rows={3}></textarea>
         <br />
         <div className="row">
@@ -15,7 +23,7 @@ export default function AssignmentEditor() {
             <label htmlFor="wd-points" className="float-end">Points</label>
           </div>
           <div className="col-8">
-            <input id="wd-points" className="form-control" />
+            <input id="wd-points" className="form-control" value={`${assignment.points}`}/>
           </div>
         </div>
         <br />
@@ -109,20 +117,44 @@ export default function AssignmentEditor() {
               <label className="form-label" htmlFor="wd-due-date">
                 <b>Date</b>
               </label>
-              <input type="date" id="wd-due-date" className="form-control"/>
+              <div className="input-group bg-transparent col"> 
+                <input id="wd-search-assignment"
+                  className="form-control"
+                  placeholder="mm/dd/yyyy" 
+                  value={`${assignment.dDate}`} />
+                <span className="input-group-text">
+                  <FaCalendarAlt />
+                </span>
+              </div>
             </div>
             <div className="row pb-5">
               <div className="col">
                 <label htmlFor="wd-available-from" className="form-label">
                   <b>Available From</b>
                 </label>
-                <input type="date" id="wd-available-from" className="form-control"/>
+                <div className="input-group bg-transparent col"> 
+                <input id="wd-search-assignment"
+                  className="form-control"
+                  placeholder="Available Date"
+                  value={`${assignment.aDate}`} />
+                <span className="input-group-text">
+                  <FaCalendarAlt />
+                </span>
+              </div>
               </div>
               <div className="col">
                 <label htmlFor="wd-available-until" className="form-label">
                   <b>Until</b>
                 </label>
-                <input type="date" id="wd-available-until" className="form-control"/>
+                <div className="input-group bg-transparent col"> 
+                <input id="wd-search-assignment"
+                  className="form-control"
+                  placeholder="Due Date"
+                  value={`${assignment.dDate}`} />
+                <span className="input-group-text">
+                  <FaCalendarAlt />
+                </span>
+              </div>
               </div>
             </div>
           </div>
@@ -130,12 +162,8 @@ export default function AssignmentEditor() {
         <br />
         <hr />
         <div className="d-flex float-end">
-          <button className="btn btn-lg btn-secondary">
-            Cancel
-          </button>
-          <button className="btn btn-lg btn-danger">
-            Save
-          </button>
+          <Link to={`/Kanbas/Courses/${cid}/Assignments`} className="btn btn-secondary">Cancel</Link>
+          <Link to={`/Kanbas/Courses/${cid}/Assignments`} className="btn btn-danger">Save</Link>
         </div>
       </div>
     );

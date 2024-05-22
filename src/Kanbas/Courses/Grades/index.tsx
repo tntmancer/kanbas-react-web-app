@@ -2,9 +2,14 @@ import { FaGear, FaFileImport, FaFileExport, } from "react-icons/fa6";
 import { FaSearch } from "react-icons/fa";
 import { BsFunnel } from "react-icons/bs";
 import { IoExitOutline } from "react-icons/io5";
+import {assignments, grades, enrollments, users} from "../../Database";
 import "../../styles.css";
+import { useParams } from "react-router";
 
 export default function Grades() {
+    const { cid } = useParams();
+    const courseAssignments = assignments.filter((assignments) => assignments.course === cid);
+    const studentsEnrolled = enrollments.filter((enrollments) => enrollments.course === cid);
     return (
         <div>
             <div className="text-nowrap pb-5">
@@ -70,30 +75,40 @@ export default function Grades() {
                         <th scope="col" className="table-cell"><b>
                             Student Name
                         </b></th>
-                        <th scope="col" className="table-cell">
-                            A1 Setup
+                        {courseAssignments.map((assignment) => (
+                            <th scope="col" className="table-cell">
+                                {`${assignment.title}`}
                             <br />
-                            <small>Out of 100</small>
+                            <small>Out of {`${assignment.points}`}</small>
                         </th>
-                        <th scope="col" className="table-cell">
-                            A2 HTML
-                            <br />
-                            <small>Out of 100</small>
-                        </th>
-                        <th scope="col" className="table-cell">
-                            A3 CSS
-                            <br />
-                            <small>Out of 100</small>
-                        </th>
-                        <th scope="col" className="table-cell">
-                            A4 Bootstrap
-                            <br />
-                            <small>Out of 100</small>
-                        </th>
+                        ))}
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
+                    {studentsEnrolled.map((student) => (
+                        <tr>
+                            <td className="text-danger">
+                                {(users.find((user) => user._id === student.user) || {firstName:""}).firstName} {(users.find((user) => user._id === student.user) || {lastName:""}).lastName}
+                            </td>
+                            {courseAssignments.map((assignment) => (
+                                // map each assignment to the grade associated with the student
+                                <td className="table-cell">
+                                    {grades.map((grade) => (
+                                        // find the grade associated with the student and assignment
+                                        (grade.student === student.user && grade.assignment === assignment._id) ? `${grade.grade}%` : null
+                                    ))}
+                                </td>
+                            ))}
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </div>
+    )
+}
+
+/**
+ * <tr>
                         <td className="text-danger">Jane Adams</td>
                         <td className="table-cell">90%</td>
                         <td className="table-cell">80%</td>
@@ -105,7 +120,6 @@ export default function Grades() {
                         <td className="table-cell">85%</td>
                         <td className="table-cell">
                             <div>
-                                {/* Add a grade input text box with rounded edges followed by exit icon*/}
                                 <input type="text" className="rounded mr-2 border-dark" />
                                 <IoExitOutline className="fs-5" />
                             </div>
@@ -127,8 +141,4 @@ export default function Grades() {
                         <td className="table-cell">55%</td>
                         <td className="table-cell">45%</td>
                     </tr>
-                </tbody>
-            </table>
-        </div>
-    )
-}
+ */
