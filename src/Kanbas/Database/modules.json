@@ -4,6 +4,7 @@
       "name": "Intro to the College of Engineering",
       "description": "An overview of the College of Engineering and its programs.",
       "course": "COE101",
+      "editing": false,
       "lessons": [
         {
           "_id": "L101",
