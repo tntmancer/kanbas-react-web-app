@@ -7,12 +7,22 @@ import { FaCalendarAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
+import * as client from "./client";
 
 export default function AssignmentEditor() {
   const { cid, id } = useParams();
   console.log(cid, id);
   const { assignments } = useSelector((state: any) => state.assignmentsReducer);
   const dispatch = useDispatch();
+
+  const createAssignment = async (assignment: any) => {
+    const newAssignment = await client.createAssignment(cid as string, assignment);
+    dispatch(addAssignment(newAssignment));
+  };
+  const saveAssignment = async (assignment: any) => {
+    const status = await client.updateAssignment(assignment);
+    dispatch(updateAssignment(assignment));
+  };
 
   const assignment = assignments.find((assignment: any) => assignment._id === id) || { "_id": new Date().getTime().toString(), "title": "New assignment", "course": cid, "points": 100, "aDate": "May 6 at 12:00 am", "dDate": "May 13 at 12:00 am", "description": "Enter the Assignment Description here."};
   const [newAssignment, setNewAssignment] = useState(assignment);
@@ -188,10 +198,10 @@ export default function AssignmentEditor() {
             className="btn btn-danger"
             onClick={() => {
               if (id === "New") {
-                dispatch(addAssignment({...newAssignment}))
+                createAssignment(newAssignment)
                 console.log(newAssignment)
               } else {
-                dispatch(updateAssignment({...newAssignment}))
+                saveAssignment({...newAssignment})
                 console.log(newAssignment)
               }
             }}>Save</Link>

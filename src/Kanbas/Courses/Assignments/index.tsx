@@ -5,15 +5,28 @@ import { useParams } from "react-router";
 import "../../styles.css";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteAssignment }
+import { deleteAssignment, setAssignments }
   from "./reducer";
 import AssignmentControlButtons from "./AssignmentControlButtons";
+import * as client from "./client";
+import { useEffect } from "react";
 
 export default function Assignments() {
   const { cid } = useParams();
   const { assignments } = useSelector((state: any) => state.assignmentsReducer);
   const dispatch = useDispatch();
 
+  const fetchAssignments = async () => {
+    const assignments = await client.findAssignmentsForCourse(cid as string);
+    dispatch(setAssignments(assignments));
+  };
+  useEffect(() => {
+    fetchAssignments();
+  }, []);
+  const removeAssignment = async (assignmentId: string) => {
+    await client.deleteAssignment(assignmentId);
+    dispatch(deleteAssignment(assignmentId));
+  };
     return (
       <div id="wd-assignments">
         <div className="row">
@@ -66,7 +79,7 @@ export default function Assignments() {
                 </div>
 
                 <div className="col">
-                  <AssignmentControlButtons aid={assignment._id} deleteAssignment={(aid) => dispatch(deleteAssignment(aid))} />
+                  <AssignmentControlButtons aid={assignment._id} deleteAssignment={(aid) => removeAssignment(aid)} />
                 </div>
               </div>
             </li>
