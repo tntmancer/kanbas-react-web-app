@@ -3,6 +3,7 @@ import * as client from "./client";
 import { Link, useParams } from "react-router-dom";
 import PeopleDetails from "./Details";
 import { FaPlus } from "react-icons/fa";
+
 export default function PeopleTable() {
   const [users, setUsers] = useState<any[]>([]);
   const [role, setRole] = useState("");
